@@ -1,0 +1,10 @@
+# Project exclude paths
+/common/.js/target/
+/common/.jvm/target/
+/project/project/target/
+/project/target/
+/scalajs-client/target/
+/scalajs-client/target/scala-2.13/classes/
+/server/target/
+/server/target/scala-2.13/classes/
+/target/
