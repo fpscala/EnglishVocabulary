@@ -2,14 +2,12 @@ name := "EnglishVocabulary"
 
 lazy val reactJsV        = "17.0.2"
 lazy val scalaJsReactV   = "2.0.0-RC3"
-lazy val scalaCssV   = "0.8.0-RC1"
+lazy val scalaCssV       = "0.8.0-RC1"
 lazy val CirceVersion    = "0.14.1"
 lazy val http4sVersion   = "0.23.5"
-lazy val projectSettings = Seq(
-  version      := "1.0",
-  scalaVersion := "3.0.2")
+lazy val projectSettings = Seq(version := "1.0", scalaVersion := "3.0.2")
 
-lazy val common          = crossProject(JSPlatform, JVMPlatform)
+lazy val common = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common"))
   .settings(projectSettings: _*)
@@ -25,7 +23,6 @@ lazy val `scalajs-client` = (project in file("scalajs-client"))
       "com.github.japgolly.scalajs-react" %%% "core"          % scalaJsReactV,
       "com.github.japgolly.scalajs-react" %%% "extra"         % scalaJsReactV,
       "com.github.japgolly.scalacss"      %%% "ext-react"     % scalaCssV,
-      "uz.scala"                          %%% "notification"  % "2.0.1",
       "io.circe"                          %%% "circe-core"    % CirceVersion,
       "io.circe"                          %%% "circe-parser"  % CirceVersion,
       "io.circe"                          %%% "circe-generic" % CirceVersion),
@@ -48,13 +45,19 @@ lazy val `server` = project
     Global / onChangedBuildSource := IgnoreSourceChanges,
     resolvers += Resolver.sonatypeRepo("snapshots"),
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-dsl"          % http4sVersion,
-      "org.http4s" %% "http4s-server"       % http4sVersion,
-      "org.http4s" %% "http4s-blaze-server" % http4sVersion,
-      "org.http4s" %% "http4s-blaze-client" % http4sVersion,
-      "org.http4s" %% "http4s-scalatags"    % http4sVersion))
+      "org.http4s"        %% "http4s-dsl"          % http4sVersion,
+      "org.http4s"        %% "http4s-blaze-server" % http4sVersion,
+      "org.typelevel"     %% "cats-core"           % "2.6.1",
+      "org.typelevel"     %% "cats-effect"         % "3.3-162-2022ef9"),
+    scalacOptions ++= Seq(
+      "-deprecation",
+      "-encoding", "UTF-8",
+      "-feature",
+      "-unchecked"
+    ))
   .enablePlugins(WebScalaJSBundlerPlugin)
 
 lazy val `english_vocabulary` = (project in file("."))
   .aggregate(`server`, `scalajs-client`)
+
 Global / onLoad := (Global / onLoad).value.andThen(state => "project server" :: state)
