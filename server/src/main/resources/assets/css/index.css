@@ -1,0 +1,8 @@
+body {
+    background: url("/assets/images/bg.jpg") fixed;
+    background-size: cover;
+    height: 100%;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+}

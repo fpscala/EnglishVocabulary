@@ -7,6 +7,10 @@ lazy val CirceVersion    = "0.14.1"
 lazy val http4sVersion   = "0.23.5"
 lazy val projectSettings = Seq(version := "1.0", scalaVersion := "3.0.2")
 
+val webjars: Seq[ModuleID] = Seq(
+  "org.webjars" % "bootstrap" % "5.1.2"
+)
+
 lazy val common = crossProject(JSPlatform, JVMPlatform)
   .crossType(CrossType.Pure)
   .in(file("common"))
@@ -44,7 +48,7 @@ lazy val `server` = project
   .settings(
     Global / onChangedBuildSource := IgnoreSourceChanges,
     resolvers += Resolver.sonatypeRepo("snapshots"),
-    libraryDependencies ++= Seq(
+    libraryDependencies ++= webjars ++ Seq(
       "org.http4s"        %% "http4s-dsl"          % http4sVersion,
       "org.http4s"        %% "http4s-blaze-server" % http4sVersion,
       "org.typelevel"     %% "cats-core"           % "2.6.1",
