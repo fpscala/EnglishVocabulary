@@ -14,7 +14,6 @@ object Server:
 
   def webjars[F[_]: Async]: HttpRoutes[F] = WebjarServiceBuilder.apply[F].toRoutes
 
-
   def router[F[_]: Async]: HttpRoutes[F] = Router[F](
     "/" -> RootRoutes[F],
     "/webjars" -> webjars[F]
