@@ -7,7 +7,7 @@ import uz.english.utils.FileLoader
 
 object RootRoutes:
 
-  val supportedStaticExtensions = List(".css", ".png", ".ico", ".jpg", ".jpeg", ".otf", ".ttf")
+  val supportedStaticExtensions = List(".css", ".png", ".ico", ".jpg", ".jpeg", ".otf", ".ttf", ".woff2", ".woff")
   
   def apply[F[_]: Async: FileLoader]: HttpRoutes[F] = {
     implicit object dsl extends Http4sDsl[F]; import dsl._
@@ -16,6 +16,5 @@ object RootRoutes:
       case request @ GET -> Root => FileLoader[F].page("index.html", request)
       case request if supportedStaticExtensions.exists(request.pathInfo.toString.endsWith) =>
         FileLoader[F].assets(request.pathInfo.toString, request)
-      case GET -> Root / _ => NotFound()
     }
   }
