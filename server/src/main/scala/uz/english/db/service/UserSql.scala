@@ -1,22 +1,27 @@
 package uz.english.db.service
 
-import cats.effect._
+import cats.syntax.all.*
+import cats.effect.*
 import cats.implicits._
-import natchez.Trace.Implicits.noop
+import cats.effect.kernel.*
+import cats.effect.kernel.implicits.*
+import cats.effect.std.*
 import skunk._
 import skunk.codec.all._
 import skunk.implicits._
-import uz.english.Username
+import uz.english.{User, Username}
 
-trait UserSql:
-  val insert: Command[Username]
+object UserSql:
 
-object UserSqlImpl:
+  val codec: Codec[User] =
+    (int4 ~ varchar).imap {
+      case (i ~ n) => User(i, n)
+    }(c => c.id ~ c.name)
 
-  def apply() = new UserSql {
-    override val insert: Command[Username] =
-      sql"""INSERT INTO "user" VALUES (DEFAULT, $varchar)"""
-       .command
-       .gcontramap[Username]
-  }
+  val insert: Command[Username] =
+    sql"""INSERT INTO "user" VALUES (DEFAULT, $varchar)"""
+     .command
+     .gcontramap[Username]
 
+  val selectAll: Query[Void, User] =
+    sql"""SELECT * FROM "user" """.query(codec)
