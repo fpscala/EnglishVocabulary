@@ -1,23 +1,27 @@
 package uz.english.route
 
-import cats.effect.kernel.Async
-import org.http4s.HttpRoutes
+import cats.*
+import cats.effect.kernel.*
+import org.http4s.{EntityDecoder, HttpRoutes}
 import org.http4s.dsl.Http4sDsl
-import io.circe._
-import io.circe.generic.auto._
-import io.circe.syntax._
-import org.http4s.EntityEncoder
-import org.http4s.circe._
+import cats.implicits.*
+import io.circe.generic.auto.*
+import org.http4s.circe.CirceInstances
+import uz.english.Username
 
-object UserRoutes:
-  implicit def entityEncoder[F[_]]: EntityEncoder[F, String] = jsonEncoderOf[F, String]
+object UserRoutes extends CirceInstances:
+
   def apply[F[_]: Async]: HttpRoutes[F] = {
     implicit object dsl extends Http4sDsl[F]; import dsl._
 
-    HttpRoutes.of[F] {
-      case request @ GET -> Root / "create" as username =>
-        println("Username:"  + username)
-        Ok("Successfully added".asJson)
+    implicit val usernameDecoder: EntityDecoder[F, Username]  = jsonOf[F, Username]
 
+    HttpRoutes.of[F] {
+      case request @ POST -> Root / "create" =>
+        for {
+          user <- request.as[Username]
+          _ = println("Username:"  + user.name)
+          resp <- Ok("Successfully created!")
+        } yield (resp)
     }
   }

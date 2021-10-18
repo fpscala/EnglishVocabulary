@@ -1,12 +1,12 @@
 package uz.english
 
-import cats.syntax.all._
+import cats.syntax.all.*
 import cats.effect.kernel.{Async, Resource}
 import org.http4s.HttpRoutes
 import org.http4s.blaze.server.BlazeServerBuilder
 import org.http4s.server.staticcontent.{WebjarService, WebjarServiceBuilder}
 import org.http4s.server.{Router, Server}
-import uz.english.route.RootRoutes
+import uz.english.route.{RootRoutes, UserRoutes}
 
 import scala.concurrent.ExecutionContext.global
 
@@ -16,6 +16,7 @@ object Server:
 
   def router[F[_]: Async]: HttpRoutes[F] = Router[F](
     "/" -> RootRoutes[F],
+    "/user" -> UserRoutes[F],
     "/webjars" -> webjars[F]
   )
 

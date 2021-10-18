@@ -27,7 +27,7 @@ object Main extends App with AjaxImplicits {
       if (state.username.isEmpty)
         Callback.alert("Please enter your name!")
       else
-        post[String]("/user/create", state.username)
+        post[Username]("/user/create", Username(state.username))
           .fail(onError)
           .done[String] { result =>
             $.setState(State()) >> Callback.alert(result)
