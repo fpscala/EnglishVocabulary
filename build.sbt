@@ -6,6 +6,7 @@ lazy val scalaCssV     = "0.8.0-RC1"
 lazy val CirceVersion  = "0.14.1"
 lazy val http4sVersion = "0.23.5"
 lazy val specs2Version = "5.0.0-RC-15"
+lazy val skunkVersion  = "0.2.2"
 
 lazy val projectSettings = Seq(version := "1.0", scalaVersion := "3.0.2")
 
@@ -60,6 +61,7 @@ lazy val `server` = project
       "org.specs2"    %% "specs2-core"         % specs2Version % Test,
       "org.http4s"    %% "http4s-dsl"          % http4sVersion,
       "org.http4s"    %% "http4s-blaze-server" % http4sVersion,
+      "org.tpolecat"  %% "skunk-core"          % skunkVersion,
       "org.typelevel" %% "cats-core"           % "2.6.1",
       "org.typelevel" %% "cats-effect"         % "3.3-162-2022ef9"),
     scalacOptions ++= Seq("-deprecation", "-encoding", "UTF-8", "-feature", "-unchecked"))

@@ -8,20 +8,25 @@ import cats.implicits.*
 import io.circe.generic.auto.*
 import org.http4s.circe.CirceInstances
 import uz.english.Username
+import uz.english.service.UserService
 
 object UserRoutes extends CirceInstances:
 
-  def apply[F[_]: Async]: HttpRoutes[F] = {
+  def apply[F[_]: Async](userService: UserService[F]): HttpRoutes[F] = {
     implicit object dsl extends Http4sDsl[F]; import dsl._
 
     implicit val usernameDecoder: EntityDecoder[F, Username]  = jsonOf[F, Username]
 
     HttpRoutes.of[F] {
       case request @ POST -> Root / "create" =>
-        for {
+        (for {
           user <- request.as[Username]
           _ = println("Username:"  + user.name)
+          _ <- userService.create(user)
           resp <- Ok("Successfully created!")
-        } yield (resp)
+        } yield (resp)).handleErrorWith { error =>
+          println(error)
+          BadRequest("Error occurred while create user!")
+        }
     }
   }
